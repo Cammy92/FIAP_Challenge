@@ -1,0 +1,99 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.login-container {
+    position: absolute;
+    z-index: 10;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-box {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 30px;
+    width: 300px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+    text-align: center;
+    backdrop-filter: blur(10px);
+}
+
+.components-menu-svg {
+    width: 150px;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.textbox {
+    margin-bottom: 20px;
+}
+
+.textbox input {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    color: #fff;
+    font-size: 16px;
+    outline: none;
+    transition: background-color 0.3s;
+}
+
+.textbox input:focus {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.textbox input::placeholder {
+    color: #fff;
+    opacity: 1;
+}
+
+.textbox input::-webkit-input-placeholder { color: #fff; opacity: 1; }
+.textbox input:-moz-placeholder { color: #fff; opacity: 1; }
+.textbox input::-moz-placeholder { color: #fff; opacity: 1; }
+.textbox input:-ms-input-placeholder { color: #fff; opacity: 1; }
+
+
+.btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #eb1452;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: #c30d3a;
+}
+
+canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+}
+
+p.erro {
+    color: red;
+    margin-top: 20px;
+}

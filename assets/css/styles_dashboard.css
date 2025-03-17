@@ -1,0 +1,156 @@
+/* Reset básico de margens e paddings */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #000;
+    color: #eb1452;
+}
+
+/* Container */
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    background-color: #141010;
+    color: #eb1452;
+    padding: 20px;
+    height: 100%;
+    position: fixed;
+    transition: transform 0.3s ease-in-out;
+}
+
+svg {
+    width: 80px;
+    margin: 20px auto;
+    display: block;
+}
+
+.sidebar-header h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #eb1452;
+}
+
+.sidebar-nav {
+    list-style: none;
+    margin-top: 20px;
+}
+
+.sidebar-nav li {
+    margin-bottom: 20px;
+}
+
+.sidebar-nav a {
+    color: #eb1452;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 500;
+    display: block;
+    padding: 10px 15px;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+}
+
+.sidebar-nav a:hover {
+    background-color: #eb1452;
+    color: #000;
+    transform: translateX(10px);
+}
+
+/* Main content */
+.main-content {
+    margin-left: 250px;
+    padding: 20px;
+    width: calc(100% - 250px);
+    background-color: #000;
+    color: #eb1452;
+    transition: margin-left 0.3s ease-in-out;
+}
+
+/* Header do conteúdo */
+header h1 {
+    font-size: 2rem;
+    font-weight: 500;
+    margin-top: 80px;
+    margin-bottom: 20px;
+    color: #eb1452;
+}
+
+/* Seção de visão geral (boxes) */
+.dashboard-overview {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.box {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 30px;
+    width: 30%;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+    text-align: center;
+    backdrop-filter: blur(10px);
+}
+
+.box h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.box p {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #eb1452;
+}
+
+/* Responsividade para dispositivos menores */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        text-align: center;
+        padding: 10px;
+    }
+    .main-content {
+        margin-left: 0;
+        width: 100%;
+    }
+    header h1 {
+        text-align: center;
+    }
+    .dashboard-overview {
+        flex-direction: column;
+        align-items: center;
+    }
+    .box {
+        width: 90%;
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar {
+        padding: 10px;
+    }
+    .sidebar-nav a {
+        font-size: 16px;
+    }
+    .box {
+        width: 100%;
+        padding: 20px;
+    }
+}

@@ -1,0 +1,260 @@
+/* Reset básico de margens e paddings */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #000;
+    color: #eb1452;
+}
+
+/* Container */
+.container {
+    display: flex;
+}
+
+/* Button Cadastrar */
+a[href="matricular_aluno.php"] {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #FF007F;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 16px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    text-align: center;
+}
+
+a[href="matricular_aluno.php"]:hover {
+    background-color: #e60073;
+}
+
+/* Estilo para o formulário de busca */
+form {
+    margin-bottom: 20px;
+}
+
+form.interna_matricula {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+
+form input[type="text"] {
+    margin-left: 10px;
+    margin-right: 20px;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #FF007F;
+    border-radius: 5px;
+    width: 250px;
+    margin-right: 10px;
+    color: #FF007F;
+    background-color: #000;
+}
+
+form input[type="text"]::placeholder {
+    color: #FF007F;
+}
+
+/* Estilo para o select (nome_turma) */
+form select {
+    margin-left: 10px;
+    margin-right: 20px;
+    padding: 10px 10px;
+    font-size: 16px;
+    border: 2px solid #FF007F;
+    border-radius: 5px;
+    width: 270px;
+    background-color: #000;
+    color: #FF007F;
+}
+
+
+form.interna_matricula select {
+    margin-left: 0px !important;
+    margin-bottom: 30px !important;
+}
+
+form input[type="text"]::placeholder {
+    color: #FF007F;
+}
+
+form input[type="date"] {
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #FF007F;
+    border-radius: 5px;
+    width: 250px;
+    margin-right: 10px;
+    background-color: #000;
+    color: #FF007F;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+form input[type="date"]::-webkit-calendar-picker-indicator {
+    background-color: #FF007F;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+form input[type="date"]:focus {
+    border-color: #e60073;
+    outline: none;
+}
+
+form input[type="date"]:disabled {
+    background-color: #333;
+    color: #ccc;
+    border-color: #444;
+}
+
+/* Estilo para os botões de busca e limpar */
+form button {
+    padding: 10px 20px;
+    margin-right: 10px;
+    background-color: #FF007F;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+form button.interna_matricula {
+    width: 270px;
+}
+
+form button:hover {
+    background-color: #fff;
+    color: #e60073;
+}
+
+/* Estilo para o botão Limpar Busca */
+form button#limparBusca {
+    padding: 10px 20px;
+    background-color: #FF007F;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+form button#limparBusca:hover {
+    background-color: #fff;
+    color: #e60073;
+}
+
+/* Tabela */
+table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #eb1452;
+}
+
+th {
+    background-color: #141010;
+    color: #eb1452;
+}
+
+td {
+    background-color: #141010;
+    color: #fff;
+}
+
+/* Links da tabela */
+a {
+    color: #eb1452;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Paginação */
+div {
+    margin-top: 20px;
+}
+
+div a {
+    color: #eb1452;
+    text-decoration: none;
+    padding: 5px 10px;
+    margin: 0 5px;
+}
+
+div a:hover {
+    background-color: #eb1452;
+    color: #fff;
+    text-decoration: none;
+}
+
+/* Paginação */
+div {
+    margin-top: 20px;
+}
+
+div a {
+    color: #eb1452;
+    text-decoration: none;
+    padding: 5px 10px;
+    margin: 0 5px;
+}
+
+div a:hover {
+    background-color: #eb1452;
+    color: #fff;
+    text-decoration: none;
+}
+
+/* Paginação */
+.pagination {
+    margin-top: 20px;
+    text-align: left;
+}
+
+.pagination .page-link {
+    margin: 0 5px;
+    padding: 5px 10px;
+    text-decoration: none;
+    background-color: #FF007F;
+    color: white;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.pagination .page-link:hover {
+    background-color: #e60073;
+}
+
+.pagination .current-page {
+    font-weight: bold;
+    margin: 0 10px;
+    font-size: 1.1em;
+    color: #FF007F;
+}
+
+
+
+/* Erro */
+p.erro {
+    color: red;
+    margin-bottom: 20px;
+}
