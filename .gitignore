@@ -1,0 +1,2 @@
+git rm --cached includes/config.php
+git rm --cached includes/db.php
