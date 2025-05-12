@@ -1,4 +1,5 @@
 <?php
+include '../includes/auth.php';
 include '../header.php';
 include '../includes/session.php';  // Incluindo o arquivo de sessão para ter acesso às funções
 include '../includes/db.php';
@@ -24,6 +25,7 @@ if (isset($_GET['id'])) {
         $row = $result->fetch_assoc();
         $nome = $row['nome'];
         $data_nascimento = $row['data_nascimento'];
+        $usuario = $row['usuario'];
     } else {
         echo "Aluno não encontrado!";
         exit();
@@ -33,19 +35,6 @@ if (isset($_GET['id'])) {
     exit();
 }
 
-// Se o formulário for enviado para atualizar o aluno
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nome = $_POST['nome'];
-    $data_nascimento = $_POST['data_nascimento'];
-
-    // Atualiza os dados do aluno no banco de dados
-    $stmt = $conn->prepare("UPDATE alunos SET nome = ?, data_nascimento = ? WHERE id = ?");
-    $stmt->bind_param('ssi', $nome, $data_nascimento, $alunoId);
-    $stmt->execute();
-
-    header("Location: gerenciar_alunos.php"); // Redireciona de volta para a lista de alunos
-    exit();
-}
 ?>
 
 <!DOCTYPE html>
@@ -90,13 +79,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <form method="POST" class="interna_aluno">
                 <label for="nome">Nome do Aluno: </label>
-                <input type="text" name="nome" value="<?= htmlspecialchars($nome) ?>" required><br><br>
+                <input type="text" name="nome" value="<?= htmlspecialchars($nome) ?>" required minlength="3"><br><br>
 
                 <label for="data_nascimento">Data de Nascimento:</label>
                 <input type="date" name="data_nascimento" value="<?= htmlspecialchars($data_nascimento) ?>" required><br><br>
 
+                <label for="usuario">Usuário (nickname):</label>
+                <input type="text" name="usuario" required value="<?php echo htmlspecialchars($usuario); ?>"><br><br>
+
                 <button type="submit" class="interna_aluno">Atualizar</button>
             </form>
+            <?php 
+                // Declara a data atual antes das verificações
+                $data_atual = date('Y-m-d'); // Data atual no formato YYYY-MM-DD
+            
+                // Verifica se o formulário foi enviado para atualizar o aluno
+                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                    $nome = $_POST['nome'];
+                    $data_nascimento = $_POST['data_nascimento'];
+                    $usuario = $_POST['usuario'];
+
+                    if (empty($nome) || empty($data_nascimento) || empty($usuario)) {
+                        echo "<p class='erro'>Por favor, preencha todos os campos.</p>";
+
+                    // Verifica se a data de nascimento é menor que a data atual
+                    } elseif ($data_nascimento >= $data_atual) {
+                        echo "<p class='erro'>A data de nascimento deve ser inferior à data atual.</p>";
+                    } elseif (strlen($nome) < 3) {
+                        echo "<p class='erro'>O nome do aluno deve ter pelo menos 3 caracteres.</p>";
+                    } else {
+                        // Atualiza os dados do aluno no banco de dados
+                        $stmt = $conn->prepare("UPDATE alunos SET nome = ?, data_nascimento = ?, usuario = ? WHERE id = ?");
+                        $stmt->bind_param('sssi', $nome, $data_nascimento, $usuario, $alunoId);
+                        $stmt->execute();
+
+                        header("Location: gerenciar_alunos.php"); // Redireciona de volta para a lista de alunos
+                        exit();
+                    }
+                }
+            ?>
 
         </div>
     </div>

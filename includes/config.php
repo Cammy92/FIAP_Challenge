@@ -7,6 +7,9 @@ ini_set('session.use_only_cookies', 1); // Apenas cookies para sessão
 // Inicia a sessão
 session_start();
 
+// Define o timezone padrão
+date_default_timezone_set('America/Sao_Paulo');
+
 // Cabeçalhos de segurança
 header('Strict-Transport-Security: max-age=31536000; includeSubDomains; preload');
 header('X-Frame-Options: SAMEORIGIN');

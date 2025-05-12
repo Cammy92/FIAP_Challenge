@@ -1,4 +1,5 @@
 <?php
+include '../includes/auth.php';
 include '../header.php';
 include '../includes/session.php';  // Sessão de controle de login
 include '../includes/db.php';        // Conexão com o banco

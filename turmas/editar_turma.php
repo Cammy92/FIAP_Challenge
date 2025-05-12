@@ -1,4 +1,5 @@
 <?php
+include '../includes/auth.php';
 include '../header.php';
 include '../includes/session.php';  // Incluindo o arquivo de sessão para ter acesso às funções
 include '../includes/db.php';

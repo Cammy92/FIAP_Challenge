@@ -1,4 +1,5 @@
 <?php
+include 'includes/auth.php';
 // Incluindo a conexão com o banco de dados
 include 'includes/db.php';
 
@@ -20,7 +21,7 @@ $totalMatriculas = $resultMatriculas->fetch_assoc()['total_matriculas'];
 // Verifica se o usuário está logado e se há permissão de admin
 include 'includes/session.php';  // Incluindo o arquivo de sessão
 if (!isUserLoggedIn()) {
-    header("Location: login.php");
+    header("Location: index.php");
     exit();
 }
 

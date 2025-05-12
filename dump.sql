@@ -8,7 +8,8 @@ USE fiap;
 CREATE TABLE IF NOT EXISTS alunos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
-    data_nascimento DATE NOT NULL
+    data_nascimento DATE NOT NULL,
+    usuario VARCHAR(100) NOT NULL UNIQUE  -- nickname do aluno, único
 );
 
 -- Criação da tabela de Turmas

@@ -1,4 +1,5 @@
 <?php
+include '../includes/auth.php';
 include '../header.php';
 include '../includes/session.php';  // Incluindo o arquivo de sessão para ter acesso às funções
 include '../includes/db.php';
@@ -145,6 +146,7 @@ if ($busca != '') {
                     <tr>
                         <th>ID</th>
                         <th>Nome</th>
+                        <th>Usuário</th>
                         <th>Data de Nascimento</th>
                         <th>Ações</th>
                     </tr>
@@ -152,6 +154,7 @@ if ($busca != '') {
                     <tr>
                         <td><?= htmlspecialchars($row['id']) ?></td>
                         <td><?= htmlspecialchars($row['nome']) ?></td>
+                        <td><?= htmlspecialchars($row['usuario'] ?? 'N/A') ?></td>
                         <td><?= htmlspecialchars(date('d/m/Y', strtotime($row['data_nascimento']))) ?></td>
                         <td>
                             <a href="editar_aluno.php?id=<?= $row['id'] ?>">Editar</a> | 

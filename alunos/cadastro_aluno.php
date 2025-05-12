@@ -1,4 +1,5 @@
 <?php
+include '../includes/auth.php';
 include '../header.php';
 include '../includes/session.php';  // Incluindo o arquivo de sessão para ter acesso às funções
 include '../includes/db.php';
@@ -53,29 +54,40 @@ if (!isUserLoggedIn() || $_SESSION['permissao'] != 'admin') {
 
             <form method="POST" class="interna_aluno">
                 <label for="nome">Nome do Aluno: </label>
-                <input type="text" name="nome" required placeholder="Nome do aluno" /><br><br>
+                <input type="text" name="nome" required placeholder="Nome do aluno" value="<?php echo isset($_POST['nome']) ? htmlspecialchars($_POST['nome']) : ''; ?>" /><br><br>
 
                 <label for="data_nascimento">Data de Nascimento:</label>
                 <input type="date" name="data_nascimento" required><br><br>
+
+                <label for="usuario">Usuário (nickname):</label>
+                <input type="text" name="usuario" required placeholder="ex: ca_ramos" value="<?php echo isset($_POST['usuario']) ? htmlspecialchars($_POST['usuario']) : ''; ?>"><br><br>
+
 
                 <button type="submit" class="interna_aluno">Cadastrar</button>
             </form>
 
             <?php
+                // Declara a data atual antes das verificações
+                $data_atual = date('Y-m-d'); // Data atual no formato YYYY-MM-DD
             
                 // Verifica se o formulário foi enviado
                 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $nome = $_POST['nome'];
                     $data_nascimento = $_POST['data_nascimento'];
+                    $usuario = $_POST['usuario'];
 
-                    if (empty($nome) || empty($data_nascimento)) {
+                    if (empty($nome) || empty($data_nascimento) || empty($usuario)) {
                         echo "<p class='erro'>Por favor, preencha todos os campos.</p>";
+
+                    // Verifica se a data de nascimento é menor que a data atual
+                    } elseif ($data_nascimento >= $data_atual) {
+                        echo "<p class='erro'>A data de nascimento deve ser inferior à data atual.</p>";
                     } elseif (strlen($nome) < 3) {  // Verifica se o nome tem pelo menos 3 caracteres
                         echo "<p class='erro'>O nome do aluno deve ter pelo menos 3 caracteres.</p>";
                     }  else {
                         // Inserir o aluno no banco de dados
-                        $stmt = $conn->prepare("INSERT INTO alunos (nome, data_nascimento) VALUES (?, ?)");
-                        $stmt->bind_param('ss', $nome, $data_nascimento);
+                        $stmt = $conn->prepare("INSERT INTO alunos (nome, data_nascimento, usuario) VALUES (?, ?, ?)");
+                        $stmt->bind_param('sss', $nome, $data_nascimento, $usuario);
                         $stmt->execute();
 
                         $sucesso = "Aluno cadastrado com sucesso!";
