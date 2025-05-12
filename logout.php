@@ -1,6 +1,8 @@
 <?php
-// Inicia a sessão
-session_start();
+// Verificar se a sessão foi iniciada corretamente
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 // Regenera o ID da sessão antes de destruir
 session_regenerate_id(true);
@@ -19,6 +21,7 @@ if (ini_get("session.use_cookies")) {
         time() - 42000, 
         $params["path"], 
         $params["domain"], 
+        isset($_SERVER['HTTPS']), // Verifica se o HTTPS está sendo usado
         $params["secure"], 
         $params["httponly"]
     );

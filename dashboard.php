@@ -8,10 +8,21 @@ $sqlAlunos = "SELECT COUNT(*) as total_alunos FROM alunos";
 $sqlTurmas = "SELECT COUNT(*) as total_turmas FROM turmas";
 $sqlMatriculas = "SELECT COUNT(*) as total_matriculas FROM matriculas";
 
-// Executando as consultas
+// Executando as consultas e verificando se a execução foi bem-sucedida
 $resultAlunos = $conn->query($sqlAlunos);
+if (!$resultAlunos) {
+    die('Erro na consulta SQL (Alunos): ' . $conn->error);
+}
+
 $resultTurmas = $conn->query($sqlTurmas);
+if (!$resultTurmas) {
+    die('Erro na consulta SQL (Turmas): ' . $conn->error);
+}
+
 $resultMatriculas = $conn->query($sqlMatriculas);
+if (!$resultMatriculas) {
+    die('Erro na consulta SQL (Matrículas): ' . $conn->error);
+}
 
 // Pegando os resultados
 $totalAlunos = $resultAlunos->fetch_assoc()['total_alunos'];
@@ -76,15 +87,15 @@ if (isset($_GET['logout'])) {
             <div class="dashboard-overview">
                 <div class="box">
                     <h3>Total de Alunos</h3>
-                    <p><?= $totalAlunos ?></p>
+                    <p><?= htmlspecialchars($totalAlunos) ?></p>
                 </div>
                 <div class="box">
                     <h3>Total de Turmas</h3>
-                    <p><?= $totalTurmas ?></p>
+                    <p><?= htmlspecialchars($totalTurmas) ?></p>
                 </div>
                 <div class="box">
                     <h3>Total de Matrículas</h3>
-                    <p><?= $totalMatriculas ?></p>
+                    <p><?= htmlspecialchars($totalMatriculas) ?></p>
                 </div>
             </div>
         </div>

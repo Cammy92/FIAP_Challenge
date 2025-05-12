@@ -34,10 +34,10 @@ if (empty($_SESSION['csrf_token'])) {
             </svg>
             <form action="login.php" method="POST">
                 <div class="textbox">
-                    <input type="text" placeholder="Usuário" name="usuario" required>
+                    <input type="text" placeholder="Usuário" name="usuario" required autocomplete="off">
                 </div>
                 <div class="textbox">
-                    <input type="password" placeholder="Senha" name="senha" required>
+                    <input type="password" placeholder="Senha" name="senha" required autocomplete="off">
                 </div>
                 <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                 <input type="submit" value="Conectar" class="btn">
@@ -45,7 +45,7 @@ if (empty($_SESSION['csrf_token'])) {
 
             <?php
             if (isset($_SESSION['erro_login'])) {
-                echo "<p class='erro'>" . $_SESSION['erro_login'] . "</p>";
+                echo "<p class='erro'>" . htmlspecialchars($_SESSION['erro_login'], ENT_QUOTES, 'UTF-8') . "</p>";
                 unset($_SESSION['erro_login']);
             }
             ?>

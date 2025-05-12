@@ -34,6 +34,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Consulta para buscar o usuário no banco de dados
     $sql = "SELECT id, senha, permissao FROM usuarios WHERE usuario = ?";
     $stmt = $conn->prepare($sql);
+
+
+    if ($stmt === false) {
+        die("Erro ao preparar a consulta: " . $conn->error);
+    }
+
     $stmt->bind_param('s', $usuario);
     $stmt->execute();
     $result = $stmt->get_result();

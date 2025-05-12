@@ -4,6 +4,12 @@ include '../header.php';
 include '../includes/session.php';  // Incluindo o arquivo de sessão para ter acesso às funções
 include '../includes/db.php';
 
+// Inicia a sessão de forma segura
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+session_regenerate_id(true);
+
 // Verifica se o usuário está logado e se tem permissão de admin
 if (!isUserLoggedIn() || $_SESSION['permissao'] != 'admin') {
     header("Location: ../index.php"); // Redireciona para a validação de login
@@ -12,9 +18,15 @@ if (!isUserLoggedIn() || $_SESSION['permissao'] != 'admin') {
 
 // Verifica se o ID foi passado via GET
 if (isset($_GET['id'])) {
-    $alunoId = $_GET['id'];
+    $alunoId = filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT);  // Sanitiza o ID do aluno
 
-    // Busca os dados do aluno no banco de dados
+    // Valida se o ID é um número inteiro válido
+    if (!filter_var($alunoId, FILTER_VALIDATE_INT)) {
+        echo "ID inválido!";
+        exit();
+    }
+
+    // Busca os dados do aluno no banco de dados com Prepared Statement
     $stmt = $conn->prepare("SELECT * FROM alunos WHERE id = ?");
     $stmt->bind_param('i', $alunoId);
     $stmt->execute();
@@ -95,10 +107,11 @@ if (isset($_GET['id'])) {
             
                 // Verifica se o formulário foi enviado para atualizar o aluno
                 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                    $nome = $_POST['nome'];
+                    $nome = trim($_POST['nome']); // Sanitiza e remove espaços extras
                     $data_nascimento = $_POST['data_nascimento'];
-                    $usuario = $_POST['usuario'];
+                    $usuario = trim($_POST['usuario']); // Sanitiza e remove espaços extras
 
+                    // Valida se os campos obrigatórios estão preenchidos
                     if (empty($nome) || empty($data_nascimento) || empty($usuario)) {
                         echo "<p class='erro'>Por favor, preencha todos os campos.</p>";
 
@@ -108,12 +121,13 @@ if (isset($_GET['id'])) {
                     } elseif (strlen($nome) < 3) {
                         echo "<p class='erro'>O nome do aluno deve ter pelo menos 3 caracteres.</p>";
                     } else {
-                        // Atualiza os dados do aluno no banco de dados
+                        // Atualiza os dados do aluno no banco de dados com Prepared Statement
                         $stmt = $conn->prepare("UPDATE alunos SET nome = ?, data_nascimento = ?, usuario = ? WHERE id = ?");
                         $stmt->bind_param('sssi', $nome, $data_nascimento, $usuario, $alunoId);
                         $stmt->execute();
 
-                        header("Location: gerenciar_alunos.php"); // Redireciona de volta para a lista de alunos
+                        // Protege contra redirecionamentos inesperados
+                        header("Location: gerenciar_alunos.php"); 
                         exit();
                     }
                 }

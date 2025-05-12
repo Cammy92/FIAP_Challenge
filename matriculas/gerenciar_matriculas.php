@@ -15,73 +15,66 @@ if(isset($_SESSION['mensagem_sucesso'])){
     unset($_SESSION['mensagem_sucesso']);
 }
 
-// Busca todas as turmas
-$sqlTurmas = "SELECT id, nome FROM turmas ORDER BY nome ASC";
-$turmasResult = $conn->query($sqlTurmas);
+// Buscar turmas
 $turmas = [];
-while ($turma = $turmasResult->fetch_assoc()) {
-    $turmas[] = $turma;
+$sqlTurmas = "SELECT id, nome FROM turmas ORDER BY nome ASC";
+if ($result = $conn->query($sqlTurmas)) {
+    while ($row = $result->fetch_assoc()) {
+        $turmas[] = $row;
+    }
 }
 
-// Verifica se existe um ID de matrícula para exclusão
+// Exclusão de matrícula
 if (isset($_GET['excluir'])) {
     $matricula_id = $_GET['excluir'];
-
-    // Exclui a matrícula do banco de dados
-    $sqlExcluir = "DELETE FROM matriculas WHERE id = ?";
-    $stmt = $conn->prepare($sqlExcluir);
-    
+    $stmt = $conn->prepare("DELETE FROM matriculas WHERE id = ?");
     if ($stmt) {
-        $stmt->bind_param("i", $matricula_id);  // Vincula o ID da matrícula
+        $stmt->bind_param("i", $matricula_id);
         if ($stmt->execute()) {
             $sucesso = "Matrícula excluída com sucesso!";
         } else {
-            $erro = "Erro ao excluir a matrícula.";
+            $erro = "Erro ao excluir matrícula.";
         }
         $stmt->close();
     } else {
-        $erro = "Erro na preparação da consulta.";
+        $erro = "Erro ao preparar exclusão.";
     }
 }
 
-
-// Define filtros de busca
+// Filtros
 $whereClauses = [];
 $params = [];
+$tipos = '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['buscar'])) {
-    $nome_turma = isset($_GET['nome_turma']) ? $_GET['nome_turma'] : '';
-    $nome_aluno = isset($_GET['nome_aluno']) ? $_GET['nome_aluno'] : '';
-    $data_matricula = isset($_GET['data_matricula']) ? $_GET['data_matricula'] : '';
+// Recebe dados do formulário de busca
+$nome_turma = $_GET['nome_turma'] ?? '';
+$nome_aluno = $_GET['nome_aluno'] ?? '';
+$data_matricula = $_GET['data_matricula'] ?? '';
 
-    // Filtros de busca
+if (isset($_GET['buscar'])) {
     if (!empty($nome_turma)) {
         $whereClauses[] = "turmas.id = ?";
         $params[] = $nome_turma;
+        $tipos .= 'i';
     }
-
     if (!empty($nome_aluno)) {
         $whereClauses[] = "alunos.nome LIKE ?";
-        $params[] = "%" . $nome_aluno . "%";
+        $params[] = '%' . $nome_aluno . '%';
+        $tipos .= 's';
     }
-
     if (!empty($data_matricula)) {
         $whereClauses[] = "DATE(matriculas.data_matricula) = ?";
         $params[] = $data_matricula;
+        $tipos .= 's';
     }
 }
 
-// Define a quantidade de matrículas por página
+// Paginação
 $matriculasPorPagina = 5;
-
-// Determinar a página atual
-$paginaAtual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
-$paginaAtual = ($paginaAtual > 0) ? $paginaAtual : 1;  // Se a página for menor que 1, definir como 1
-
-// Calcular o limite de matrículas a serem exibidas na consulta
+$paginaAtual = max(1, (int)($_GET['pagina'] ?? 1));
 $inicio = ($paginaAtual - 1) * $matriculasPorPagina;
 
-// Monta a consulta SQL com base nos filtros
+// Consulta principal
 $sqlMatriculas = "
     SELECT matriculas.id AS matricula_id, 
            alunos.id AS aluno_id, 
@@ -92,34 +85,36 @@ $sqlMatriculas = "
     INNER JOIN alunos ON alunos.id = matriculas.aluno_id
     INNER JOIN turmas ON matriculas.turma_id = turmas.id";
 
-// Adiciona os filtros à consulta, se existirem
-if (count($whereClauses) > 0) {
-    $sqlMatriculas .= " WHERE " . implode(" AND ", $whereClauses);
+// Aplica filtros
+if ($whereClauses) {
+    $sqlMatriculas .= ' WHERE ' . implode(' AND ', $whereClauses);
 }
 
-// Ordena pelo nome do aluno e depois pela turma
 $sqlMatriculas .= " ORDER BY alunos.nome ASC, turmas.nome ASC";
+$sqlMatriculas .= " LIMIT ?, ?";
 
-// Conta o total de registros para calcular o número de páginas
-$totalResult = $conn->query("SELECT COUNT(*) AS total FROM matriculas");
-$rowTotal = $totalResult->fetch_assoc();
-$totalMatriculas = $rowTotal['total'];
+// Acrescenta paginação nos parâmetros
+$params[] = $inicio;
+$params[] = $matriculasPorPagina;
+$tipos .= 'ii';
 
-// Calcula o número total de páginas
-$totalPaginas = ceil($totalMatriculas / $matriculasPorPagina);
-
-// Adiciona LIMIT à consulta para exibir a página atual
-$sqlMatriculas .= " LIMIT $inicio, $matriculasPorPagina";
-
-// Executa a consulta
+// Prepara e executa
 $stmt = $conn->prepare($sqlMatriculas);
-if (count($params) > 0) {
-    $stmt->bind_param(str_repeat('s', count($params)), ...$params);
+if ($stmt) {
+    $stmt->bind_param($tipos, ...$params);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $matriculas = $result->fetch_all(MYSQLI_ASSOC);
+    $stmt->close();
+} else {
+    $erro = "Erro na consulta de matrículas.";
 }
 
-$stmt->execute();
-$matriculasResult = $stmt->get_result();
-$matriculas = $matriculasResult->fetch_all(MYSQLI_ASSOC);
+// Contagem total para paginação
+$countSql = "SELECT COUNT(*) as total FROM matriculas";
+$countResult = $conn->query($countSql);
+$totalMatriculas = ($countResult) ? $countResult->fetch_assoc()['total'] : 0;
+$totalPaginas = ceil($totalMatriculas / $matriculasPorPagina);
 
 ?>
 <!DOCTYPE html>
