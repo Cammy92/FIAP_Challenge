@@ -5,14 +5,14 @@
     padding: 20px;
     height: 100vh;
     position: fixed;
-    top: 0;
+    top: -20px;
     left: 0;
     transition: transform 0.3s ease-in-out;
 }
 
 .sidebar-header svg {
     position: absolute;
-    top: 20px;
+    top: 40px;
     left: 50%;
     transform: translateX(-50%);
     width: 80px;
@@ -20,7 +20,7 @@
 
 .sidebar-nav {
     list-style: none;
-    margin-top: 40px;
+    margin-top: 60px;
 }
 
 .sidebar-nav li {
